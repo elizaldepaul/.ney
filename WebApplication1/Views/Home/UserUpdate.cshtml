@@ -1,0 +1,121 @@
+﻿@using WebApplication1.Models;
+@{
+    ViewBag.Title = "UserUpdate";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+    var userList = (IEnumerable<user>)ViewData["User"];
+}
+
+<style>
+
+    /* Add your custom CSS styles here */
+    .container {
+        margin-top: 20px;
+    }
+
+    /* Center the form horizontally */
+    .col-lg-6 {
+        margin: 0 auto;
+        float: none;
+    }
+
+    /* Style labels and inputs */
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Center the submit button */
+    .text-center {
+        text-align: center;
+    }
+
+    .sidebar {
+        width: 6.5rem;
+        min-height: 100vh;
+        position: fixed !important;
+    }
+
+    .topbar {
+        margin-left: 14rem;
+    }
+</style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="p-4">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                        </div>
+
+                        @{
+                            foreach (var item in userList)
+                            {
+
+                                <form action="Update" method="post">
+                                    <input type="hidden" name="id" value="@item.user_id">
+                                    <div class="form-group">
+                                        <label for="Name">First Name:</label>
+                                        <input type="text" name="new_first_name" value="@item.first_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Date">Last Name:</label>
+                                        <input type="text" name="new_last_name" value="@item.last_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Age">Age:</label>
+                                        <input type="text" name="new_age" value="@item.age">
+                                    </div>
+                                    <div class="radio-group"
+                                         style=" width: 30px!important; background-position: center; background-repeat: no-repeat;background-size: 350px 500px; display: flex; flex-direction: row; /* Display items horizontally */ align-items: center; /* Vertically align items */ gap: 2px;">
+                                        <p>Gender:</p>
+                                        <input type="radio" id="Male" name="gender" value="Male" @(item.gender == "Male" ? "checked" : "")
+                                               style=" margin-left: 20px;padding-bottom: 10px; margin-bottom: 10px;" required>
+                                        <label for="Male">Male</label>
+                                        <input type="radio" id="Female" name="gender" value="Female" @(item.gender == "Female" ? "checked" : "")
+                                               style=" margin-left: 20px;padding-bottom: 10px; margin-bottom: 10px;" required>
+                                        <label for="Female">Female</label>
+                                        <input type="radio" id="Other" name="gender" value="Other" @(item.gender == "Other" ? "checked" : "")
+                                               style=" margin-left: 20px;padding-bottom: 10px; margin-bottom: 10px;" required>
+                                        <label for="Other" style=" margin-bottom: 10px;padding-top: 0;">Other</label>
+                                    </div>
+
+                                    <label for="Meridiem">Email:</label>
+                                    <input type="text" name="new_email" value="@item.email"><br>
+                                    <label for="Location">Address:</label>
+                                    <input type="text" name="new_address" value="@item.address"><br>
+                                    <label for="Ootd">Password:</label>
+                                    <input type="text" name="new_password" value="@item.password"><br>
+
+                                    <input type="submit" name="Update" value="Update">
+                                </form>
+                            }
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

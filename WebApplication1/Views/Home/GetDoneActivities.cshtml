@@ -1,0 +1,241 @@
+﻿
+@model List<WebApplication1.Models.activity>
+@{
+    ViewBag.Title = "GetDoneActivities";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Tables</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/sb-admin-2.css">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+
+
+
+        <!-- End of Topbar -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800">Activities</h1>
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h6 class="m-0 font-weight-bold text-primary">All Your Activities To Come</h6>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <!-- =======================================================   end of add activity modal =============================================================== -->
+
+                <div class="card-body">
+                    <div class="table-responsive" id="employee_table">
+
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+
+                            <thead>
+                                <tr>
+                                    <th>activity_name</th>
+                                    <th>activity_date (dd-mm-yyyy)</th>
+                                    <th>activity_time</th>
+                                    <th>activity_location</th>
+                                    <th>activity_status</th>
+                                    <th>activity_ootd</th>
+                                    <th>activity_remarks</th>
+                                </tr>
+                            </thead>
+
+                            <tfoot>
+                                <tr>
+                                    <th>activity_name</th>
+                                    <th>activity_date (dd-mm-yyyy)</th>
+                                    <th>activity_time</th>
+                                    <th>activity_location</th>
+                                    <th>activity_status</th>
+                                    <th>activity_ootd</th>
+                                    <th>activity_remarks</th>
+
+                                </tr>
+
+                            </tfoot>
+                            <tbody>
+
+
+                                @foreach (var act in Model)
+                                {
+
+
+
+
+
+                                    <tr>
+                                        <td>
+                                            @act.activity_name
+                                        </td>
+                                        <td>
+                                            @act.activity_date
+                                        </td>
+                                        <td>
+                                            <input type="time" value="@act.activity_time" disabled style="border : none" />
+                                        </td>
+                                        <td>
+                                            @act.activity_location
+                                        </td>
+                                        <td>
+                                            @*<img width="100px" height="100px"
+                                                src="activity_image/<?php echo $row[" activity_ootd"]; ?>" alt="">*@
+                                            @act.activity_ootd
+
+                                        </td>
+
+
+                                        <td style="color:green;">
+                                           @act.activity_status
+                                        </td>
+                                        <td>
+                                           @act.remarks
+                                        </td>
+                                    </tr>
+                                }
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="dataModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Your Activity</h4>
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body" id="employee_detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add_data_Modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Activity</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="updateimage.php" autocomplete="off" enctype="multipart/form-data">
+                        <label>Activity Name</label>
+                        <input type="text" name="activity_name" id="activity_name" class="form-control" />
+                        <input type="hidden" name="activity" id="activity" class="form-control" />
+                        <br />
+                        <label>Activity Date</label>
+                        <input type="date" name="activity_date" id="activity_date" class="form-control"></input>
+                        <br />
+                        <label>Activity Time</label>
+                        <input type="time" name="activity_time" id="activity_time" class="form-control"></input>
+                        <br />
+                        <label>Activity Location</label>
+                        <input type="text" name="activity_location" id="activity_location" class="form-control"></input>
+                        <br />
+                        <label for="activity_ootd">Activity Ootd</label>
+                        <input type="file" name="activity_ootd" id="activity_ootd">
+                        <img id="activity_ootd_preview" src="" name="activity_ootd" alt="Activity Ootd Image"
+                             style="max-width: 100%; max-height: 200px;">
+
+                        <br />
+                        <input type="hidden" name="activity_status" value="Pending">
+                        <input type="hidden" id="user_id" name="user_id" value="<?php echo $_SESSION[" ID"]; ?>">
+                        <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="php/logout.php">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+
+
+

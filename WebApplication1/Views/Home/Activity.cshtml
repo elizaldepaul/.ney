@@ -1,0 +1,104 @@
+﻿@using WebApplication1.Models;
+@{
+    ViewBag.Title = "Activity";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+    var selectedAct = (IEnumerable<activity>)ViewData["Activity"];
+
+}
+
+<style>
+
+    /* Add your custom CSS styles here */
+    .container {
+        margin-top: 20px;
+    }
+
+    /* Center the form horizontally */
+    .col-lg-6 {
+        margin: 0 auto;
+        float: none;
+    }
+
+    /* Style labels and inputs */
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"], input[type="date"], input[type="time"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Center the submit button */
+    .text-center {
+        text-align: center;
+    }
+
+    .sidebar {
+        width: 6.5rem;
+        min-height: 100vh;
+        position: fixed !important;
+    }
+</style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="p-4">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                        </div>
+
+                        @{
+                            foreach (var act in selectedAct)
+                            {
+
+                                <form action="ActivityUpdate" method="post">
+                                    <input type="hidden" name="id" value="@act.activity_id">
+                                    <label for="Name">Activity Name:</label>
+                                    <input type="text" name="activity_name" value="@act.activity_name" required>
+                                    <div class="form-group">
+                                        <label for="Name">Activity Date:</label>
+                                        <input type="date" name="activity_date" value="@act.activity_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Date">Activity Time:</label>
+                                        <input type="time" name="activity_time" value="@act.activity_time" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Age">Activity Location:</label>
+                                        <input type="text" name="activity_location" value="@act.activity_location" required>
+                                    </div>
+                                    <label for="Meridiem">Activity Ootd:</label>
+                                    <input type="text" name="activity_ootd" value="@act.activity_ootd" required><br>
+
+                                    <input type="submit" name="Update" value="Update">
+                                </form>
+                            }
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

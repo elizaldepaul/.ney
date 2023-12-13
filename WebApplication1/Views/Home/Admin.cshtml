@@ -1,0 +1,292 @@
+﻿
+@using WebApplication1.Models;
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    var userList = (IEnumerable<user>)ViewData["UserList"];
+
+}
+
+
+
+<style>
+    td, input[type="password"] {
+        text-align: center !important;
+    }
+
+    .btn-block {
+        display: flex !important;
+       
+        justify-content:space-around;
+    }
+
+    .view_data {
+        width: 20px;
+        font-size:15px;
+    }
+
+    .input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="button"].btn-block {
+        text-align: center !important;
+        width: auto;
+        margin: auto;
+    }
+
+    .edit_data {
+        margin-top: 8px;
+    }
+
+    .align {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* Set the number of columns you desire (e.g., 5 cards per row) */
+        grid-gap: 20px; /* Adjust the gap between cards */
+    }
+
+    .card-container {
+        display: inline-block;
+        width: 100%;
+        break-inside: avoid; /* Prevent cards from breaking across columns */
+    }
+</style>
+
+
+<!-- Pie Chart -->
+<div class="col-xl-4 col-lg-5">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Gender</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </a>
+
+
+            </div>
+        </div>
+        <div class="card-body">
+            <?php
+
+            $db_connection = connect_to_database();
+            $query = "SELECT gender, COUNT(*) AS count FROM user GROUP BY gender";
+            $result = mysqli_query($db_connection, $query);
+
+            $dataPoints = array();
+
+            while ($row = mysqli_fetch_assoc($result)) {
+            $label = ucfirst($row['gender']);
+            $y = $row['count'];
+            $dataPoints[] = array("label" => $label, "y" => $y);
+            }
+            ?>
+            <script>
+                window.onload = function () {
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+                        title: {
+
+                        },
+                        data: [{
+                            type: "pie",
+                            yValueFormatString: "#,##\"\"",
+                            indexLabel: "{label} ({y})",
+                            dataPoints: <? php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                                                                    }]
+                                                                });
+                chart.render();
+                                                            }
+            </script>
+            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+            <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+        </div>
+    </div>
+</div>
+
+
+<h1 class="h3 mb-2 text-gray-800 ml-3">Announcements</h1>
+<?php
+$query = "SELECT * FROM announcement ORDER BY created_at DESC";
+$announcement = $db_connection->query($query);
+?>
+<div class="align">
+    <?php while ($row = $announcement->fetch_assoc()) { ?>
+    <div class="card-container">
+        <div class="card border-success ml-4 mb-3" style="max-width: 18rem;">
+            <div class="card-header bg-transparent border-success"><?php echo $row['announcement_title']; ?></div>
+            <div class="card-body text-success">
+                <p class="card-text"><?php echo $row['announcement']; ?></p>
+            </div>
+            <div class="card-footer bg-transparent border-success">
+                <?php echo date("F j, Y h:i A", strtotime($row["created_at"])); ?>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+</div>
+<?php
+$sql = "SELECT * FROM user ORDER BY ID DESC";
+$users = mysqli_query($db_connection, $sql);
+?>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">All Registered Users</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" id="user_table">
+
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Actions</th>
+
+                        </tr>
+                    </thead>
+
+                    <tfoot>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+
+                        @{
+                            foreach (var item in userList)
+                            {
+
+                                <!-- Inside the while loop -->
+
+                                <tr>
+                                    <td>@item.first_name</td>
+                                    <td>@item.last_name</td>
+
+                                    <td>
+
+                                        <div class="btn-block">
+                                            <form action="UserUpdate" method="post">
+                                                <input type="hidden" name="id" value="@item.user_id" />
+                                                <button type="submit" name="edit" id="@item.user_id" class="btn btn-primary  mb-2 btn-user  btn-block edit_data">Edit</button>
+                                                
+                                            </form>
+
+                                            <form action="UserDelete" method="post">
+                                                <input type="hidden" name="id" value="@item.user_id" />
+                                                <button type="submit" name="edit" id="@item.user_id" class="btn btn-primary  mb-2 btn-user  btn-block edit_data">Delete</button>
+
+                                            </form>
+
+                                                <!-- <input class="btn btn-primary  mb-2 btn-user  btn-block" type="submit" name="Edit" value="Edit"> -->
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            }
+
+
+                        }
+                    </tbody>
+
+
+            </div>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- End of Topbar -->
+</body>
+
+
+<div id="dataModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body" id="employee_detail">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="add_data_Modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="name"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body">
+                <form method="post" id="insert_form">
+
+                    <label>Enter First Name</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" required />
+                    <br />
+
+                    <label>Enter Last Name</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" required />
+                    <br />
+
+                    <label>Enter Age</label>
+                    <input type="number" name="age" id="age" class="form-control" required />
+                    <br />
+
+                    <label>Enter Nick Name</label>
+                    <input type="text" name="nick_name" id="nick_name" class="form-control" required />
+                    <br />
+
+                    <label>Enter Email</label>
+                    <input type="email" name="email" id="email" class="form-control" required />
+                    <br />
+
+                    <label>Enter Address</label>
+                    <input name="address" id="address" class="form-control" required />
+                    <br />
+
+                    <label>Select Gender</label>
+                    <select name="gender" id="gender" class="form-control">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <br />
+
+                    <label>Enter Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required />
+                    <br />
+
+                    <label>Select Role</label>
+                    <select name="role" id="role" class="form-control" required>
+                        <option value="User" required>User</option>
+                        <option value="Admin" required>Admin</option>
+                    </select>
+                    <br />
+
+                    <label>Select Status</label>
+                    <select name="status" id="status" class="form-control" required>
+                        <option value="Active" required>Active</option>
+                        <option value="Deactive" required>Deactive</option>
+                    </select>
+                    <br />
+
+
+                    <input type="hidden" name="user_id" id="user_id" />
+                    <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-success" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
